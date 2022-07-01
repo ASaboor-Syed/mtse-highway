@@ -28,10 +28,10 @@ class DivergeEnv(AbstractEnv):
             "high_speed_reward": 0.2,
             "merging_speed_reward": -0.5,
             "lane_change_reward": -0.05,
-            "lane_count_start":4
-            "lane_count_div1":2
-            "lane_count_div2":2
-            "destination_lane":0
+            "lane_count_start":4,
+            "lane_count_div1":2,
+            "lane_count_div2":2,
+            "destination_lane":0,
         })
         return cfg
 
