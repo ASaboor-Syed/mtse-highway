@@ -92,8 +92,8 @@ class DivergeEnv(AbstractEnv):
         lab = StraightLane([0, y[0]], [sum(ends[:2]), y[0]], line_types=line_type[0]))
         lbc = SineLane(lab.position(ends[0], -amplitude), lab.position(sum(ends[:2]), -amplitude),
                        amplitude, 2 * np.pi / (2*ends[0]), np.pi / 2, line_types=[c, c], forbidden=True)
-        net.add_lane("a,b",lab)
-        net.add_lane("b,c",lbc)
+        net.add_lane("a","b",lab)
+        net.add_lane("b","c",lbc)
         
 #        for i in range(2):
 #            net.add_lane("a", "b", lab)
