@@ -36,29 +36,7 @@ class DivergeEnv(AbstractEnv):
         return cfg
 
     def _reward(self, action: int) -> float:
-        """
-        The vehicle is rewarded for driving with high speed on lanes to the right and avoiding collisions
-
-        But an additional altruistic penalty is also suffered if any vehicle on the merging lane has a low speed.
-
-        :param action: the action performed
-        :return: the reward of the state-action transition
-        """
-        neighbours = self.road.network.all_side_lanes(self.vehicle.lane_index)
-        lane = self.vehicle.target_lane_index[2] if isinstance(self.vehicle, ControlledVehicle) \
-            else self.vehicle.lane_index[2]
-        # Use forward speed rather than speed, see https://github.com/eleurent/highway-env/issues/268
-        forward_speed = self.vehicle.speed * np.cos(self.vehicle.heading)
-        scaled_speed = utils.lmap(forward_speed, self.config["reward_speed_range"], [0, 1])
-        reward = \
-            + self.config["collision_reward"] * self.vehicle.crashed \
-            + self.config["right_lane_reward"] * lane / max(len(neighbours) - 1, 1) \
-            + self.config["high_speed_reward"] * np.clip(scaled_speed, 0, 1)
-        reward = utils.lmap(reward,
-                          [self.config["collision_reward"],
-                           self.config["high_speed_reward"] + self.config["right_lane_reward"]],
-                          [0, 1])
-        reward = 0 if not self.vehicle.on_road else reward
+        reward = 0
         return reward
 
     def _is_terminal(self) -> bool:
@@ -112,25 +90,7 @@ class DivergeEnv(AbstractEnv):
         self.road = road
 
     def _make_vehicles(self) -> None:
-        other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
-        other_per_controlled = near_split(self.config["vehicles_count"], num_bins=self.config["controlled_vehicles"])
 
-        self.controlled_vehicles = []
-        for others in other_per_controlled:
-            vehicle = Vehicle.create_random(
-                self.road,
-                speed=25,
-                lane_id=self.config["initial_lane_id"],
-                spacing=self.config["ego_spacing"]
-            )
-            vehicle = self.action_type.vehicle_class(self.road, vehicle.position, vehicle.heading, vehicle.speed)
-            self.controlled_vehicles.append(vehicle)
-            self.road.vehicles.append(vehicle)
-
-            for _ in range(others):
-                vehicle = other_vehicles_type.create_random(self.road, spacing=1 / self.config["vehicles_density"])
-                vehicle.randomize_behavior()
-                self.road.vehicles.append(vehicle)
 
 
 register(
