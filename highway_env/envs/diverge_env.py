@@ -112,24 +112,25 @@ class DivergeEnv(AbstractEnv):
         self.road = road
 
     def _make_vehicles(self) -> None:
-        """
-        Populate a road with several vehicles on the highway and on the merging lane, as well as an ego-vehicle.
-
-        :return: the ego-vehicle
-        """
-        road = self.road
-        ego_vehicle = self.action_type.vehicle_class(road,
-                                                     road.network.get_lane(("a", "b", 1)).position(30, 0),
-                                                     speed=30)
-        road.vehicles.append(ego_vehicle)
-
         other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
-        road.vehicles.append(other_vehicles_type(road, road.network.get_lane(("a", "b", 0)).position(90, 0), speed=29))
-        road.vehicles.append(other_vehicles_type(road, road.network.get_lane(("a", "b", 1)).position(70, 0), speed=31))
-        road.vehicles.append(other_vehicles_type(road, road.network.get_lane(("a", "b", 0)).position(5, 0), speed=31.5))
+        other_per_controlled = near_split(self.config["vehicles_count"], num_bins=self.config["controlled_vehicles"])
 
-        merging_v.target_speed = 30
-        self.vehicle = ego_vehicle
+        self.controlled_vehicles = []
+        for others in other_per_controlled:
+            vehicle = Vehicle.create_random(
+                self.road,
+                speed=25,
+                lane_id=self.config["initial_lane_id"],
+                spacing=self.config["ego_spacing"]
+            )
+            vehicle = self.action_type.vehicle_class(self.road, vehicle.position, vehicle.heading, vehicle.speed)
+            self.controlled_vehicles.append(vehicle)
+            self.road.vehicles.append(vehicle)
+
+            for _ in range(others):
+                vehicle = other_vehicles_type.create_random(self.road, spacing=1 / self.config["vehicles_density"])
+                vehicle.randomize_behavior()
+                self.road.vehicles.append(vehicle)
 
 
 register(
