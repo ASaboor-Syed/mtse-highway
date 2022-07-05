@@ -44,25 +44,22 @@ class DivergeEnv(AbstractEnv):
         :param action: the action performed
         :return: the reward of the state-action transition
         """
-        action_reward = {0: self.config["lane_change_reward"],
-                         1: 0,
-                         2: self.config["lane_change_reward"],
-                         3: 0,
-                         4: 0}
-        reward = self.config["collision_reward"] * self.vehicle.crashed \
-            + self.config["right_lane_reward"] * self.vehicle.lane_index[2] / 1 \
-            + self.config["high_speed_reward"] * self.vehicle.speed_index / (self.vehicle.target_speeds.size - 1)
-
-        # Altruistic penalty
-        for vehicle in self.road.vehicles:
-            if vehicle.lane_index == ("b", "c", 2) and isinstance(vehicle, ControlledVehicle):
-                reward += self.config["merging_speed_reward"] * \
-                          (vehicle.target_speed - vehicle.speed) / vehicle.target_speed
-
-        return utils.lmap(action_reward[action] + reward,
-                          [self.config["collision_reward"] + self.config["merging_speed_reward"],
+        neighbours = self.road.network.all_side_lanes(self.vehicle.lane_index)
+        lane = self.vehicle.target_lane_index[2] if isinstance(self.vehicle, ControlledVehicle) \
+            else self.vehicle.lane_index[2]
+        # Use forward speed rather than speed, see https://github.com/eleurent/highway-env/issues/268
+        forward_speed = self.vehicle.speed * np.cos(self.vehicle.heading)
+        scaled_speed = utils.lmap(forward_speed, self.config["reward_speed_range"], [0, 1])
+        reward = \
+            + self.config["collision_reward"] * self.vehicle.crashed \
+            + self.config["right_lane_reward"] * lane / max(len(neighbours) - 1, 1) \
+            + self.config["high_speed_reward"] * np.clip(scaled_speed, 0, 1)
+        reward = utils.lmap(reward,
+                          [self.config["collision_reward"],
                            self.config["high_speed_reward"] + self.config["right_lane_reward"]],
                           [0, 1])
+        reward = 0 if not self.vehicle.on_road else reward
+        return reward
 
     def _is_terminal(self) -> bool:
         """The episode is over when a collision occurs or when the access ramp has been passed."""
