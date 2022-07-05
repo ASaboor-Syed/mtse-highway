@@ -82,20 +82,15 @@ class DivergeEnv(AbstractEnv):
         c, s, n = LineType.CONTINUOUS_LINE, LineType.STRIPED, LineType.NONE
         y = [0, StraightLane.DEFAULT_WIDTH]
         line_type = [[c, s], [n, c]]
-        line_type_div = [[c, c]]
         
         amplitude = 3.25
         
-        lab = StraightLane([0, y[0]], [sum(ends[:2]), y[0]], line_types=line_type[0]))
-        lbc = SineLane(lab.position(ends[0], -amplitude), lab.position(sum(ends[:2]), -amplitude),
-                       amplitude, 2 * np.pi / (2*ends[0]), np.pi / 2, line_types=[c, c], forbidden=True)
-        net.add_lane("a","b",lab)
-        net.add_lane("b","c",lbc)
-        lab = StraightLane([0, y[1]], [sum(ends[:2]), y[1]], line_types=line_type[1]))
-        lbc = SineLane(lab.position(ends[0], -amplitude), lab.position(sum(ends[:2]), amplitude),
-                       -amplitude, 2 * np.pi / (2*ends[0]), np.pi / 2, line_types=[c, c], forbidden=True)
-        net.add_lane("a","b",lab)
-        net.add_lane("b","c",lbc)
+        
+        for i in range(2):
+            lab = StraightLane([0, y[i]], [sum(ends[:2]), y[i]], line_types=line_type[i]))
+#            lbc = SineLane(lab.position(ends[0], -amplitude), lab.position(sum(ends[:2]), -amplitude), amplitude, 2 * np.pi / (2*ends[0]), np.pi / 2, line_types=[c, c], forbidden=True)
+            net.add_lane("a","b",lab)
+#            net.add_lane("b","c",lbc)
         
 #        for i in range(2):
 #            net.add_lane("a", "b", lab)
@@ -133,9 +128,7 @@ class DivergeEnv(AbstractEnv):
         road.vehicles.append(other_vehicles_type(road, road.network.get_lane(("a", "b", 1)).position(70, 0), speed=31))
         road.vehicles.append(other_vehicles_type(road, road.network.get_lane(("a", "b", 0)).position(5, 0), speed=31.5))
 
-        merging_v = other_vehicles_type(road, road.network.get_lane(("j", "k", 0)).position(110, 0), speed=20)
         merging_v.target_speed = 30
-        road.vehicles.append(merging_v)
         self.vehicle = ego_vehicle
 
 
