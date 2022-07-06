@@ -76,9 +76,9 @@ class DivergeEnv(AbstractEnv):
         ends = [75, 40, 80, 150]  # Before, converging, merge, after
         c, s, n = LineType.CONTINUOUS_LINE, LineType.STRIPED, LineType.NONE
         y = [0, StraightLane.DEFAULT_WIDTH]
-        line_type = [[c, s], [n, c]]
-        line_type_merge = [[c, s], [n, s]]
-        for i in range(2):
+        line_type = [[c, s], [n, s], [n, c]]
+        line_type_merge = [[c, s], [n, s], [n, s]]
+        for i in range(len(line_type)):
             net.add_lane("a", "b", StraightLane([0, y[i]], [sum(ends[:2]), y[i]], line_types=line_type[i]))
             net.add_lane("b", "c", StraightLane([sum(ends[:2]), y[i]], [sum(ends[:3]), y[i]], line_types=line_type_merge[i]))
             net.add_lane("c", "d", StraightLane([sum(ends[:3]), y[i]], [sum(ends), y[i]], line_types=line_type[i]))
