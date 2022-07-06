@@ -70,19 +70,8 @@ class DivergeEnv(AbstractEnv):
         Make a road composed of a straight highway and a merging lane.
         :return: the road
         """
-        net = RoadNetwork()
-
-        # Highway lanes
-        ends = [75, 40, 80, 150]  # Before, converging, merge, after
-        c, s, n = LineType.CONTINUOUS_LINE, LineType.STRIPED, LineType.NONE
-        y = [0, StraightLane.DEFAULT_WIDTH]
-        line_type = [[c, s], [n, s], [n, c]]
-        line_type_merge = [[c, s], [n, s], [n, s]]
-        for i in range(len(line_type)):
-            net.add_lane("a", "b", StraightLane([0, i*StraightLane.DEFAULT_WIDTH], [sum(ends[:2]), i*StraightLane.DEFAULT_WIDTH], line_types=line_type[i]))
-            net.add_lane("b", "c", StraightLane([sum(ends[:2]), i*StraightLane.DEFAULT_WIDTH], [sum(ends[:3]), i*StraightLane.DEFAULT_WIDTH], line_types=line_type_merge[i]))
-            net.add_lane("c", "d", StraightLane([sum(ends[:3]), i*StraightLane.DEFAULT_WIDTH], [sum(ends), i*StraightLane.DEFAULT_WIDTH], line_types=line_type[i]))
-
+        self.road = Road(network=RoadNetwork.straight_road_network(4, speed_limit=30),
+                         np_random=self.np_random, record_history=self.config["show_trajectories"])
 
     def _make_vehicles(self) -> None:
         """
