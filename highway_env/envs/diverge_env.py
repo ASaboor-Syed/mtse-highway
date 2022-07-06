@@ -79,9 +79,9 @@ class DivergeEnv(AbstractEnv):
         line_type = [[c, s], [n, s], [n, c]]
         line_type_merge = [[c, s], [n, s], [n, s]]
         for i in range(len(line_type)):
-            net.add_lane("a", "b", StraightLane([0, y[i]], [sum(ends[:2]), y[i]], line_types=line_type[i]))
-            net.add_lane("b", "c", StraightLane([sum(ends[:2]), y[i]], [sum(ends[:3]), y[i]], line_types=line_type_merge[i]))
-            net.add_lane("c", "d", StraightLane([sum(ends[:3]), y[i]], [sum(ends), y[i]], line_types=line_type[i]))
+            net.add_lane("a", "b", StraightLane([0, i*StraightLane.DEFAULT_WIDTH], [sum(ends[:2]), i*StraightLane.DEFAULT_WIDTH], line_types=line_type[i]))
+            net.add_lane("b", "c", StraightLane([sum(ends[:2]), i*StraightLane.DEFAULT_WIDTH], [sum(ends[:3]), i*StraightLane.DEFAULT_WIDTH], line_types=line_type_merge[i]))
+            net.add_lane("c", "d", StraightLane([sum(ends[:3]), i*StraightLane.DEFAULT_WIDTH], [sum(ends), i*StraightLane.DEFAULT_WIDTH], line_types=line_type[i]))
 
         # Merging lane
         amplitude = -6.25
