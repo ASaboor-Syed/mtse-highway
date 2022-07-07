@@ -90,15 +90,15 @@ class DivergeEnv(AbstractEnv):
         net.add_lane("a", "b", straight_lanes[0][0])
         net.add_lane("b", "c", straight_lanes[0][1])
         net.add_lane("c", "d", SineLane(straight_lanes[0][1].position(ends[0], -amplitude), straight_lanes[0][1].position(sum(ends[:2]), -amplitude),
-                       amplitude, np.pi / (ends[1]), np.pi / 4, line_types=[c, c], forbidden=True))
+                       amplitude, np.pi / (ends[1]), np.pi / 2, line_types=[c, c], forbidden=True))
                      
         net.add_lane("a", "b", straight_lanes[1][0])
         net.add_lane("b", "c", straight_lanes[1][1])
         net.add_lane("c", "d", SineLane(straight_lanes[1][1].position(ends[0], amplitude), straight_lanes[1][1].position(sum(ends[:2]), amplitude),
-                       -amplitude, np.pi / (ends[1]), np.pi / 4, line_types=[c, c], forbidden=True))
+                       -amplitude, np.pi / (ends[1]), np.pi / 2, line_types=[c, c], forbidden=True))
 
         # Merging lane
-        amplitude = -3.25
+        amplitude = 3.25
         ljk = StraightLane([0, 6.5 + 4 + 4], [ends[0], 6.5 + 4 + 4], line_types=[c, c], forbidden=True)
         lkb = SineLane(ljk.position(ends[0], -amplitude), ljk.position(sum(ends[:2]), -amplitude),
                        amplitude, np.pi / (ends[1]), np.pi / 4, line_types=[c, c], forbidden=True)
