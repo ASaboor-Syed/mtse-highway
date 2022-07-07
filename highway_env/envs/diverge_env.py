@@ -134,6 +134,6 @@ class DivergeEnv(AbstractEnv):
 
 
 register(
-    id='diverge-v0.02',
+    id='diverge-v0.1',
     entry_point='highway_env.envs:DivergeEnv',
 )
