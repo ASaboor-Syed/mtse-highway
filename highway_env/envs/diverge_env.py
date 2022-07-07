@@ -80,7 +80,7 @@ class DivergeEnv(AbstractEnv):
         line_type_merge = [[c, s], [n, s]]
         straight_lanes = []
         for i in range(len(line_type)):
-            lane_parts = []\
+            lane_parts = []
             lane_parts.append(StraightLane([0, i*StraightLane.DEFAULT_WIDTH], [sum(ends[:2]), i*StraightLane.DEFAULT_WIDTH], line_types=line_type[i]))
             lane_parts.append(StraightLane([sum(ends[:2]), i*StraightLane.DEFAULT_WIDTH], [sum(ends[:3]), i*StraightLane.DEFAULT_WIDTH], line_types=line_type[i]))
             straight_lanes.append(lane_parts)
