@@ -73,7 +73,7 @@ class DivergeEnv(AbstractEnv):
         net = RoadNetwork()
 
         # Highway lanes
-        ends = [75, 40, 80, 150]  # Before, converging, merge, after
+        ends = [75, 40, 40, 150]  # Before, converging, merge, after
         c, s, n = LineType.CONTINUOUS_LINE, LineType.STRIPED, LineType.NONE
         y = [0, StraightLane.DEFAULT_WIDTH]
         line_type = [[c, s], [n, c]]
