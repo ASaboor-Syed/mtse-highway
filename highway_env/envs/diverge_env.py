@@ -89,12 +89,12 @@ class DivergeEnv(AbstractEnv):
             
         net.add_lane("a", "b", straight_lanes[0][0])
         net.add_lane("b", "c", straight_lanes[0][1])
-        net.add_lane("c", "d", SineLane(straight_lanes[0][1].position(ends[1], -amplitude), straight_lanes[0][1].position(sum(ends[:2]), -amplitude),
+        net.add_lane("c", "d", SineLane(straight_lanes[0][1].position(ends[1], -amplitude), straight_lanes[0][1].position(sum(ends[:3]), -amplitude),
                        amplitude, np.pi / (ends[1]), np.pi / 2, line_types=[c, c], forbidden=True))
                      
         net.add_lane("a", "b", straight_lanes[1][0])
         net.add_lane("b", "c", straight_lanes[1][1])
-        net.add_lane("c", "d", SineLane(straight_lanes[1][1].position(ends[1], amplitude), straight_lanes[1][1].position(sum(ends[:2]), amplitude),
+        net.add_lane("c", "d", SineLane(straight_lanes[1][1].position(ends[1], amplitude), straight_lanes[1][1].position(sum(ends[:3]), amplitude),
                        -amplitude, np.pi / (ends[1]), np.pi / 2, line_types=[c, c], forbidden=True))
 
         # Merging lane
