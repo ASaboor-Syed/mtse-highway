@@ -78,7 +78,7 @@ class DivergeEnv(AbstractEnv):
         y = [0, StraightLane.DEFAULT_WIDTH]
         line_type = [[c, s], [n, c]]
         line_type_merge = [[c, s], [n, s]]
-        straight_lanes = []
+        straight_lanes = [[]]
         for i in range(len(line_type)):
             straight_lanes[i][0] = StraightLane([0, i*StraightLane.DEFAULT_WIDTH], [sum(ends[:2]), i*StraightLane.DEFAULT_WIDTH], line_types=line_type[i])
             straight_lanes[i][1] = StraightLane([sum(ends[:2]), i*StraightLane.DEFAULT_WIDTH], [sum(ends[:3]), i*StraightLane.DEFAULT_WIDTH], line_types=line_type_merge[i])
