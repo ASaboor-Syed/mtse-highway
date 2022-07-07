@@ -73,7 +73,7 @@ class DivergeEnv(AbstractEnv):
         net = RoadNetwork()
 
         # Highway lanes
-        ends = [75, 40, 40, 150]  # Before, converging, merge, after
+        ends = [75, 40, 30, 150]  # Before, converging, merge, after
         c, s, n = LineType.CONTINUOUS_LINE, LineType.STRIPED, LineType.NONE
         y = [0, StraightLane.DEFAULT_WIDTH]
         line_type = [[c, s], [n, c]]
@@ -82,7 +82,7 @@ class DivergeEnv(AbstractEnv):
         for i in range(len(line_type)):
             lane_parts = []
             lane_parts.append(StraightLane([0, i*StraightLane.DEFAULT_WIDTH], [sum(ends[:2]), i*StraightLane.DEFAULT_WIDTH], line_types=line_type[i]))
-            lane_parts.append(StraightLane([sum(ends[:2]), i*StraightLane.DEFAULT_WIDTH], [sum(ends[:3]), i*StraightLane.DEFAULT_WIDTH], line_types=line_type_merge[i]))
+            lane_parts.append(StraightLane([sum(ends[:2]), i*StraightLane.DEFAULT_WIDTH], [sum(ends[:3]), i*StraightLane.DEFAULT_WIDTH], line_types=line_type[i]))
             straight_lanes.append(lane_parts)
             
         amplitude = 3.25
