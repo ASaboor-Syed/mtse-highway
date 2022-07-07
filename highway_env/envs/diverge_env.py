@@ -78,10 +78,22 @@ class DivergeEnv(AbstractEnv):
         y = [0, StraightLane.DEFAULT_WIDTH]
         line_type = [[c, s], [n, c]]
         line_type_merge = [[c, s], [n, s]]
+        straight_lanes = []
         for i in range(len(line_type)):
-            net.add_lane("a", "b", StraightLane([0, i*StraightLane.DEFAULT_WIDTH], [sum(ends[:2]), i*StraightLane.DEFAULT_WIDTH], line_types=line_type[i]))
-            net.add_lane("b", "c", StraightLane([sum(ends[:2]), i*StraightLane.DEFAULT_WIDTH], [sum(ends[:3]), i*StraightLane.DEFAULT_WIDTH], line_types=line_type_merge[i]))
-            net.add_lane("c", "d", StraightLane([sum(ends[:3]), i*StraightLane.DEFAULT_WIDTH], [sum(ends), i*StraightLane.DEFAULT_WIDTH], line_types=line_type[i]))
+            straight_lanes[i][0] = StraightLane([0, i*StraightLane.DEFAULT_WIDTH], [sum(ends[:2]), i*StraightLane.DEFAULT_WIDTH], line_types=line_type[i])
+            straight_lanes[i][1] = StraightLane([sum(ends[:2]), i*StraightLane.DEFAULT_WIDTH], [sum(ends[:3]), i*StraightLane.DEFAULT_WIDTH], line_types=line_type_merge[i])
+            
+        amplitude = 3.25
+            
+        net.add_lane("a", "b", straight_lanes[0][0])
+        net.add_lane("b", "c", straight_lanes[0][1])
+        net.add_lane("c", "d", SineLane(straight_lanes[0][1].position(ends[0], -amplitude), straight_lanes[0][1].position(sum(ends[:2]), -amplitude),
+                       amplitude, np.pi / (ends[1]), np.pi / 4, line_types=[c, c], forbidden=True)
+                     
+        net.add_lane("a", "b", straight_lanes[1][0])
+        net.add_lane("b", "c", straight_lanes[1][1])
+        net.add_lane("c", "d", SineLane(straight_lanes[1][1].position(ends[0], amplitude), straight_lanes[1][1].position(sum(ends[:2]), amplitude),
+                       -amplitude, np.pi / (ends[1]), np.pi / 4, line_types=[c, c], forbidden=True)
 
         # Merging lane
         amplitude = -3.25
