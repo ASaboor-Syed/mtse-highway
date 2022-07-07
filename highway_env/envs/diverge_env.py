@@ -85,7 +85,7 @@ class DivergeEnv(AbstractEnv):
             lane_parts.append(StraightLane([sum(ends[:2]), i*StraightLane.DEFAULT_WIDTH], [sum(ends[:3]), i*StraightLane.DEFAULT_WIDTH], line_types=line_type[i]))
             straight_lanes.append(lane_parts)
             
-        amplitude = 3.25
+        amplitude = 9.25
             
         net.add_lane("a", "b", straight_lanes[0][0])
         net.add_lane("b", "c", straight_lanes[0][1])
