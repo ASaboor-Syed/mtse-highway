@@ -73,7 +73,7 @@ class DivergeEnv(AbstractEnv):
         net = RoadNetwork()
 
         # Highway lanes
-        ends = [75, 40, 40, 90]  # Before, converging, merge, after
+        ends = [75, 40, 40, 80]  # Before, converging, merge, after
         c, s, n = LineType.CONTINUOUS_LINE, LineType.STRIPED, LineType.NONE
         y = [0, StraightLane.DEFAULT_WIDTH]
         line_type = [[c, s], [n, c]]
@@ -85,16 +85,22 @@ class DivergeEnv(AbstractEnv):
             lane_parts.append(StraightLane([sum(ends[:2]), i*StraightLane.DEFAULT_WIDTH], [sum(ends[:3]), i*StraightLane.DEFAULT_WIDTH], line_types=line_type[i]))
             straight_lanes.append(lane_parts)
             
-        amplitude = 1.75
-            
-        net.add_lane("a", "b", straight_lanes[0][0])
-        net.add_lane("b", "c", straight_lanes[0][1])
-        net.add_lane("c", "d", SineLane(straight_lanes[0][1].position(ends[2], -amplitude), straight_lanes[0][1].position(sum(ends[:3]), -amplitude),
+        n_diverging = 1
+        amplitude = 2.50
+        
+        for l in straight_lanes:
+            for p in straight_lanes:
+                net.add_lane("a", "b", p)
+                net.add_lane("b", "c", p)
+            net.add_lane("c", "d", SineLane(l[1].position(ends[2], -amplitude), straight_lanes[0][1].position(sum(ends[:3]), -amplitude),
                        amplitude, np.pi / (ends[1]), np.pi / 2, line_types=[c, c], forbidden=True))
+            n_diverging -= 1
+            if n_diverging == 0:
+                ampitude *= -1
                      
-        net.add_lane("a", "b", straight_lanes[1][0])
-        net.add_lane("b", "c", straight_lanes[1][1])
-        net.add_lane("c", "d", SineLane(straight_lanes[1][1].position(ends[2], amplitude), straight_lanes[1][1].position(sum(ends[:3]), amplitude),
+#        net.add_lane("a", "b", straight_lanes[1][0])
+#        net.add_lane("b", "c", straight_lanes[1][1])
+#        net.add_lane("c", "d", SineLane(straight_lanes[1][1].position(ends[2], amplitude), straight_lanes[1][1].position(sum(ends[:3]), amplitude),
                        -amplitude, np.pi / (ends[1]), np.pi / 2, line_types=[c, c], forbidden=True))
 
         # Merging lane
