@@ -96,7 +96,7 @@ class DivergeEnv(AbstractEnv):
                        amplitude, np.pi / (ends[1]), np.pi / 2, line_types=[c, c], forbidden=True))
             n_diverging -= 1
             if n_diverging == 0:
-                ampitude *= -1
+                amplitude *= -1
                      
 #        net.add_lane("a", "b", straight_lanes[1][0])
 #        net.add_lane("b", "c", straight_lanes[1][1])
