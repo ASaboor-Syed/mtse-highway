@@ -89,7 +89,7 @@ class DivergeEnv(AbstractEnv):
         amplitude = 2.50
         
         for l in straight_lanes:
-            for p in straight_lanes:
+            for p in l:
                 net.add_lane("a", "b", p)
                 net.add_lane("b", "c", p)
             net.add_lane("c", "d", SineLane(l[1].position(ends[2], -amplitude), straight_lanes[0][1].position(sum(ends[:3]), -amplitude),
