@@ -88,20 +88,26 @@ class DivergeEnv(AbstractEnv):
         n_diverging = 1
         amplitude = 2.50
         
-        for l in straight_lanes:
-            for p in l:
-                net.add_lane("a", "b", p)
-                net.add_lane("b", "c", p)
-            net.add_lane("c", "d", SineLane(l[1].position(ends[2], -amplitude), straight_lanes[0][1].position(sum(ends[:3]), -amplitude),
+#        for l in straight_lanes:
+#            for p in l:
+#                net.add_lane("a", "b", p)
+#                net.add_lane("b", "c", p)
+#            net.add_lane("c", "d", SineLane(l[1].position(ends[2], -amplitude), straight_lanes[0][1].position(sum(ends[:3]), -amplitude),
+#                       amplitude, np.pi / (ends[1]), np.pi / 2, line_types=[c, c], forbidden=True))
+#            n_diverging -= 1
+#            if n_diverging == 0:
+#                amplitude *= -1
+
+        net.add_lane("a", "b", straight_lanes[0][0])
+        net.add_lane("b", "c", straight_lanes[0][1])
+        net.add_lane("c", "d", SineLane(straight_lanes[0][1].position(ends[2], -amplitude), straight_lanes[0][1].position(sum(ends[:3]), -amplitude),
                        amplitude, np.pi / (ends[1]), np.pi / 2, line_types=[c, c], forbidden=True))
-            n_diverging -= 1
-            if n_diverging == 0:
-                amplitude *= -1
-                     
-#        net.add_lane("a", "b", straight_lanes[1][0])
-#        net.add_lane("b", "c", straight_lanes[1][1])
-#        net.add_lane("c", "d", SineLane(straight_lanes[1][1].position(ends[2], amplitude), straight_lanes[1][1].position(sum(ends[:3]), amplitude),
-#                       -amplitude, np.pi / (ends[1]), np.pi / 2, line_types=[c, c], forbidden=True))
+
+
+        net.add_lane("a", "b", straight_lanes[1][0])
+        net.add_lane("b", "c", straight_lanes[1][1])
+        net.add_lane("c", "d", SineLane(straight_lanes[1][1].position(ends[2], amplitude), straight_lanes[1][1].position(sum(ends[:3]), amplitude),
+                       -amplitude, np.pi / (ends[1]), np.pi / 2, line_types=[c, c], forbidden=True))
 
         # Merging lane
         amplitude = 3.25
