@@ -88,22 +88,12 @@ class DivergeEnv(AbstractEnv):
         n_diverging = 1
         amplitude = 2.50
         
-#        for l in straight_lanes:
-#            for p in l:
-#                net.add_lane("a", "b", p)
-#                net.add_lane("b", "c", p)
-#            net.add_lane("c", "d", SineLane(l[1].position(ends[2], -amplitude), straight_lanes[0][1].position(sum(ends[:3]), -amplitude),
-#                       amplitude, np.pi / (ends[1]), np.pi / 2, line_types=[c, c], forbidden=True))
-#            n_diverging -= 1
-#            if n_diverging == 0:
-#                amplitude *= -1
-
         net.add_lane("a", "b", straight_lanes[0][0])
         net.add_lane("b", "c", straight_lanes[0][1])
         net.add_lane("c", "d", SineLane(straight_lanes[0][1].position(ends[2], -amplitude), straight_lanes[0][1].position(sum(ends[:3]), -amplitude),
-                       amplitude, np.pi / (ends[1]), np.pi / 2, line_types=[c, c], forbidden=True))
-
-
+                    amplitude, np.pi / (ends[1]), np.pi / 2, line_types=[c, c], forbidden=True))
+        
+                     
         net.add_lane("a", "b", straight_lanes[1][0])
         net.add_lane("b", "c", straight_lanes[1][1])
         net.add_lane("c", "d", SineLane(straight_lanes[1][1].position(ends[2], amplitude), straight_lanes[1][1].position(sum(ends[:3]), amplitude),
@@ -132,11 +122,16 @@ class DivergeEnv(AbstractEnv):
         ego_vehicle = self.action_type.vehicle_class(road,
                                                      road.network.get_lane(("a", "b", 1)).position(30, 0),
                                                      speed=30)
+        
+        ego_vehicle.configure({"target_lane_index":np.randint(0,2)})
         road.vehicles.append(ego_vehicle)
 
         other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
+        other_vehicles_type.configure({"target_lane_index":np.randint(0,2)})
         road.vehicles.append(other_vehicles_type(road, road.network.get_lane(("a", "b", 0)).position(90, 0), speed=29))
+        other_vehicles_type.configure({"target_lane_index":np.randint(0,2)})
         road.vehicles.append(other_vehicles_type(road, road.network.get_lane(("a", "b", 1)).position(70, 0), speed=31))
+        other_vehicles_type.configure({"target_lane_index":np.randint(0,2)})
         road.vehicles.append(other_vehicles_type(road, road.network.get_lane(("a", "b", 0)).position(5, 0), speed=31.5))
 
         merging_v = other_vehicles_type(road, road.network.get_lane(("j", "k", 0)).position(110, 0), speed=20)
