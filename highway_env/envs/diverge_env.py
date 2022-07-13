@@ -73,7 +73,7 @@ class DivergeEnv(AbstractEnv):
         net = RoadNetwork()
 
         # Highway lanes
-        ends = [75, 40, 40, 80]  # Before, converging, merge, after
+        ends = [75, 40, 40]  # Before, converging, merge, after
         c, s, n = LineType.CONTINUOUS_LINE, LineType.STRIPED, LineType.NONE
         y = [0, StraightLane.DEFAULT_WIDTH]
         line_type = [[c, s], [n, c]]
@@ -90,13 +90,13 @@ class DivergeEnv(AbstractEnv):
         
         net.add_lane("a", "b", straight_lanes[0][0])
         net.add_lane("b", "c", straight_lanes[0][1])
-        net.add_lane("c", "d", SineLane(straight_lanes[0][1].position(ends[2], -amplitude), straight_lanes[0][1].position(sum(ends[:3]), -amplitude),
+        net.add_lane("c", "d", SineLane(straight_lanes[0][1].position(ends[2], -amplitude), straight_lanes[0][1].position(sum(ends), -amplitude),
                     amplitude, np.pi / (ends[1]), np.pi / 2, line_types=[c, c], forbidden=True))
         
                      
         net.add_lane("a", "b", straight_lanes[1][0])
         net.add_lane("b", "c", straight_lanes[1][1])
-        net.add_lane("c", "d", SineLane(straight_lanes[1][1].position(ends[2], amplitude), straight_lanes[1][1].position(sum(ends[:3]), amplitude),
+        net.add_lane("c", "d", SineLane(straight_lanes[1][1].position(ends[2], amplitude), straight_lanes[1][1].position(sum(ends), amplitude),
                        -amplitude, np.pi / (ends[1]), np.pi / 2, line_types=[c, c], forbidden=True))
 
         # Merging lane
