@@ -73,31 +73,34 @@ class DivergeEnv(AbstractEnv):
         net = RoadNetwork()
 
         # Highway lanes
-        ends = [75, 40, 40]  # Before, converging, merge, after
+        ends = [150, 40, 60, 200]  # Before, converging, merge, after
         c, s, n = LineType.CONTINUOUS_LINE, LineType.STRIPED, LineType.NONE
         y = [0, StraightLane.DEFAULT_WIDTH]
         line_type = [[c, s], [n, c]]
-        line_type_merge = [[c, s], [n, s]]
-        straight_lanes = []
+        lanes = []
         for i in range(len(line_type)):
             lane_parts = []
             lane_parts.append(StraightLane([0, i*StraightLane.DEFAULT_WIDTH], [sum(ends[:2]), i*StraightLane.DEFAULT_WIDTH], line_types=line_type[i]))
             lane_parts.append(StraightLane([sum(ends[:2]), i*StraightLane.DEFAULT_WIDTH], [sum(ends[:3]), i*StraightLane.DEFAULT_WIDTH], line_types=line_type[i]))
-            straight_lanes.append(lane_parts)
+            lanes.append(lane_parts)
             
         n_diverging = 1
         amplitude = 2.50
         
-        net.add_lane("a", "b", straight_lanes[0][0])
-        net.add_lane("b", "c", straight_lanes[0][1])
-        net.add_lane("c", "d", SineLane(straight_lanes[0][1].position(ends[2], -amplitude), straight_lanes[0][1].position(sum(ends), -amplitude),
-                    amplitude, np.pi / (ends[1]), np.pi / 2, line_types=[c, c], forbidden=True))
+        lanes[0].append(SineLane(lanes[0][1].position(ends[2], -amplitude), lanes[0][1].position(sum(ends[:3]), -amplitude),
+                    amplitude, np.pi / (ends[2]), np.pi / 2, line_types=[c, c]))
+        lanes[1].append(SineLane(lanes[0][1].position(ends[2], amplitude), lanes[0][1].position(sum(ends[:3]), amplitude),
+                    -amplitude, np.pi / (ends[2]), np.pi / 2, line_types=[c, c]))
         
-                     
-        net.add_lane("a", "b", straight_lanes[1][0])
-        net.add_lane("b", "c", straight_lanes[1][1])
-        net.add_lane("c", "d", SineLane(straight_lanes[1][1].position(ends[2], amplitude), straight_lanes[1][1].position(sum(ends), amplitude),
-                       -amplitude, np.pi / (ends[1]), np.pi / 2, line_types=[c, c], forbidden=True))
+        for lane in lanes:
+            lane.append(StraightLane(lane[2].position(ends[2], 0), lane[2].position(ends[2], 0) + [ends[3], 0],
+                           line_types=[c, c]))
+
+        for l in lanes:
+            net.add_lane("a", "b", l[0])
+            net.add_lane("b", "c", l[1])
+            net.add_lane("c", "d", l[2])
+            net.add_lane("d", "e", l[3])
 
         # Merging lane
         amplitude = 3.25
@@ -121,7 +124,7 @@ class DivergeEnv(AbstractEnv):
         road = self.road
         ego_vehicle = self.action_type.vehicle_class(road,
                                                      road.network.get_lane(("a", "b", 1)).position(30, 0),
-                                                     speed=30,target_lane_index=("c", "d", 0))
+                                                     speed=30)
         
         road.vehicles.append(ego_vehicle)
 
