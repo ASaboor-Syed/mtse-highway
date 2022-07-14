@@ -27,7 +27,7 @@ class DivergeEnv(AbstractEnv):
             "high_speed_reward": 0.2,
             "merging_speed_reward": -0.5,
             "lane_change_reward": -0.05,
-            "partition_length":[150, 40, 40, 200]
+            "partition_length":[150, 40, 200]
         })
         return cfg
 
@@ -82,19 +82,18 @@ class DivergeEnv(AbstractEnv):
         for i in range(len(line_type)):
             lane_parts = []
             lane_parts.append(StraightLane([0, i*StraightLane.DEFAULT_WIDTH], [ends[0], i*StraightLane.DEFAULT_WIDTH], line_types=line_type[i]))
-            lane_parts.append(StraightLane([ends[0], i*StraightLane.DEFAULT_WIDTH], [sum(ends[:2]), i*StraightLane.DEFAULT_WIDTH], line_types=line_type[i]))
             lanes.append(lane_parts)
             
         n_diverging = 1
         amplitude = 2.75
         
-        lanes[0].append(SineLane(lanes[0][1].position(sum(ends[:2]), -amplitude), lanes[0][1].position(sum(ends[:3]), -amplitude),
-                    amplitude, np.pi / (ends[2]), np.pi / 2, line_types=[c, c]))
-        lanes[1].append(SineLane(lanes[1][1].position(sum(ends[:2]), amplitude), lanes[1][1].position(sum(ends[:3]), amplitude),
-                    -amplitude, np.pi / (ends[2]), np.pi / 2, line_types=[c, c]))
+        lanes[0].append(SineLane(lanes[0][1].position(ends[0], -amplitude), lanes[0][1].position(sum(ends[:2]), -amplitude),
+                    amplitude, np.pi / (ends[0]), np.pi / 2, line_types=[c, c]))
+        lanes[1].append(SineLane(lanes[1][1].position(ends[0], amplitude), lanes[1][1].position(sum(ends[:2]), amplitude),
+                    -amplitude, np.pi / (ends[0]), np.pi / 2, line_types=[c, c]))
         
         for lane in lanes:
-            lane.append(StraightLane(lane[2].position(ends[2], 0), lane[2].position(ends[2], 0) + [ends[3], 0],
+            lane.append(StraightLane(lane[2].position(ends[1], 0), lane[2].position(ends[1], 0) + [ends[2], 0],
                            line_types=[c, c]))
 
         for l in lanes:
