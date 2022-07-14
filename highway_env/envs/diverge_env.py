@@ -82,7 +82,7 @@ class DivergeEnv(AbstractEnv):
         for i in range(len(line_type)):
             lane_parts = []
             lane_parts.append(StraightLane([0, i*StraightLane.DEFAULT_WIDTH], [ends[0], i*StraightLane.DEFAULT_WIDTH], line_types=line_type[i]))
-            lane_parts.append(StraightLane(ends[0], i*StraightLane.DEFAULT_WIDTH], [sum(ends[:2]), i*StraightLane.DEFAULT_WIDTH], line_types=line_type[i]))
+            lane_parts.append(StraightLane([ends[0], i*StraightLane.DEFAULT_WIDTH], [sum(ends[:2]), i*StraightLane.DEFAULT_WIDTH], line_types=line_type[i]))
             lanes.append(lane_parts)
             
         n_diverging = 1
@@ -95,7 +95,7 @@ class DivergeEnv(AbstractEnv):
         
         for lane in lanes:
             lane.append(StraightLane(lane[2].position(ends[3], 0), lkb.position(ends[3], 0) + [ends[3], 0],
-                           line_types=[c, c])
+                           line_types=[c, c]))
 
         for l in lanes:
             net.add_lane("a", "b", l[0])
