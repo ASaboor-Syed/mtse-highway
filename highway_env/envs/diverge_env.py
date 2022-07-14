@@ -93,7 +93,7 @@ class DivergeEnv(AbstractEnv):
                     -amplitude, np.pi / (ends[2]), np.pi / 2, line_types=[c, c]))
         
         for lane in lanes:
-            lane.append(StraightLane(lane[2].position(ends[3], 0), lane[2].position(ends[2], 0) + [ends[3], 0],
+            lane.append(StraightLane(lane[2].position(ends[3], 0), lane[2].position(ends[3], 0),
                            line_types=[c, c]))
 
         for l in lanes:
