@@ -89,11 +89,11 @@ class DivergeEnv(AbstractEnv):
         
         lanes[0].append(SineLane(lanes[0][1].position(ends[2], -amplitude), lanes[0][1].position(sum(ends[:3]), -amplitude),
                     amplitude, np.pi / (ends[2]), np.pi / 2, line_types=[c, c]))
-        lanes[1].append(SineLane(lanes[0][1].position(ends[2], amplitude), lanes[0][1].position(sum(ends[:3]), amplitude),
+        lanes[1].append(SineLane(lanes[1][1].position(ends[2], amplitude), lanes[1][1].position(sum(ends[:3]), amplitude),
                     -amplitude, np.pi / (ends[2]), np.pi / 2, line_types=[c, c]))
         
         for lane in lanes:
-            lane.append(StraightLane(lane[2].position(ends[2], 0), lane[2].position(ends[2], 0) + [ends[3], 0],
+            lane.append(StraightLane(lane[2].position(ends[3], 0), lane[2].position(ends[2], 0) + [ends[3], 0],
                            line_types=[c, c]))
 
         for l in lanes:
