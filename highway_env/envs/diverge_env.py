@@ -101,7 +101,6 @@ class DivergeEnv(AbstractEnv):
             net.add_lane("a", "b", l[0])
             net.add_lane("b", "c", l[1])
             net.add_lane("c", "d", l[2])
-            net.add_lane("d", "e", l[3])
 
         # Merging lane
         amplitude = 3.25
