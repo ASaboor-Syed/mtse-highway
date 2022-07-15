@@ -89,6 +89,7 @@ class DivergeEnv(AbstractEnv):
         
         print (len(lanes))
         print (ends)
+        print (sum(ends[:2]))
 
         lanes[0].append(SineLane(lanes[0][1].position(ends[0], -amplitude), lanes[0][1].position(sum(ends[:2]), -amplitude),
                     amplitude, np.pi / (ends[0]), np.pi / 2, line_types=[c, c]))
