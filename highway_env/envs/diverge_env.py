@@ -86,6 +86,9 @@ class DivergeEnv(AbstractEnv):
             
         n_diverging = 1
         amplitude = 2.75
+        
+        print (len(lanes))
+        print (ends)
 
         lanes[0].append(SineLane(lanes[0][1].position(ends[0], -amplitude), lanes[0][1].position(sum(ends[:2]), -amplitude),
                     amplitude, np.pi / (ends[0]), np.pi / 2, line_types=[c, c]))
