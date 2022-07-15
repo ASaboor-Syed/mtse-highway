@@ -89,13 +89,13 @@ class DivergeEnv(AbstractEnv):
         
 
         lanes[0].append(SineLane(lanes[0][0].position(ends[0], -amplitude), lanes[0][0].position(sum(ends[:2]), -amplitude),
-                    amplitude, np.pi / (ends[0]), np.pi / 2, line_types=[c, c]))
+                    amplitude, np.pi / (ends[0]), np.pi / 2, line_types=[c, c],forbidden=True))
         lanes[1].append(SineLane(lanes[1][0].position(ends[0], amplitude), lanes[1][0].position(sum(ends[:2]), amplitude),
-                    -amplitude, np.pi / (ends[0]), np.pi / 2, line_types=[c, c]))
+                    -amplitude, np.pi / (ends[0]), np.pi / 2, line_types=[c, c],forbidden=True))
         
         for lane in lanes:
             lane.append(StraightLane(lane[1].position(ends[1], 0), lane[1].position(ends[1], 0) + [ends[1], 0],
-                           line_types=[c, c]))
+                           line_types=[c, c],forbidden=True))
 
         for l in lanes:
             net.add_lane("a", "b", l[0])
@@ -124,7 +124,7 @@ class DivergeEnv(AbstractEnv):
         road = self.road
         ego_vehicle = self.action_type.vehicle_class(road,
                                                      road.network.get_lane(("a", "b", 1)).position(30, 0),
-                                                     speed=30)
+                                                     speed=30,target_lane_index=("b","c",0))
         
         road.vehicles.append(ego_vehicle)
 
