@@ -102,16 +102,7 @@ class DivergeEnv(AbstractEnv):
             net.add_lane("b", "c", l[1])
             net.add_lane("c", "d", l[2])
 
-        # Merging lane
-        amplitude = 3.25
-        ljk = StraightLane([0, 6.5 + 4 + 4], [ends[0], 6.5 + 4 + 4], line_types=[c, c], forbidden=True)
-        lkb = SineLane(ljk.position(ends[0], -amplitude), ljk.position(sum(ends[:2]), -amplitude),
-                       amplitude, np.pi / (ends[1]), np.pi / 4, line_types=[c, c], forbidden=True)
-        lbc = StraightLane(lkb.position(ends[1], 0), lkb.position(ends[1], 0) + [ends[2], 0],
-                           line_types=[n, c], forbidden=True)
-        net.add_lane("j", "k", ljk)
-        net.add_lane("k", "b", lkb)
-        net.add_lane("b", "c", lbc)
+   
         road = Road(network=net, np_random=self.np_random, record_history=self.config["show_trajectories"])
         road.objects.append(Obstacle(road, lbc.position(ends[2], 0)))
         self.road = road
@@ -124,7 +115,7 @@ class DivergeEnv(AbstractEnv):
         road = self.road
         ego_vehicle = self.action_type.vehicle_class(road,
                                                      road.network.get_lane(("a", "b", 1)).position(30, 0),
-                                                     speed=30)
+                                                     speed=30, target_lane_index=("b","c","0"))
         
         road.vehicles.append(ego_vehicle)
 
@@ -133,9 +124,6 @@ class DivergeEnv(AbstractEnv):
         road.vehicles.append(other_vehicles_type(road, road.network.get_lane(("a", "b", 1)).position(70, 0), speed=31))
         road.vehicles.append(other_vehicles_type(road, road.network.get_lane(("a", "b", 0)).position(5, 0), speed=31.5))
 
-        merging_v = other_vehicles_type(road, road.network.get_lane(("j", "k", 0)).position(110, 0), speed=20)
-        merging_v.target_speed = 30
-        road.vehicles.append(merging_v)
         self.vehicle = ego_vehicle
 
 
