@@ -115,7 +115,7 @@ class DivergeEnv(AbstractEnv):
         road = self.road
         ego_vehicle = self.action_type.vehicle_class(road,
                                                      road.network.get_lane(("a", "b", 1)).position(30, 0),
-                                                     speed=30, target_lane_index=("b","c","0"))
+                                                     speed=30, target_lane_index=("b","c",0))
         
         road.vehicles.append(ego_vehicle)
 
