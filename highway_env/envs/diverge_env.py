@@ -104,7 +104,7 @@ class DivergeEnv(AbstractEnv):
 
    
         road = Road(network=net, np_random=self.np_random, record_history=self.config["show_trajectories"])
-        road.objects.append(Obstacle(road, lbc.position(ends[2], 0)))
+#        road.objects.append(Obstacle(road, lbc.position(ends[2], 0)))
         self.road = road
 
     def _make_vehicles(self) -> None:
