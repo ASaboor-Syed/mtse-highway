@@ -53,6 +53,11 @@ class DivergeEnv(AbstractEnv):
                 reward += self.config["merging_speed_reward"] * \
                           (vehicle.target_speed - vehicle.speed) / vehicle.target_speed
 
+        for vehicle in self.road.vehicles:
+            if vehicle.position == ("a","b",100) and not isinstance(vehicle, ControlledVehicle):
+                vehicle.target_lane_index=("b","c",np.random.randint(2))
+                
+
         return utils.lmap(action_reward[action] + reward,
                           [self.config["collision_reward"] + self.config["merging_speed_reward"],
                            self.config["high_speed_reward"] + self.config["right_lane_reward"]],
@@ -101,6 +106,7 @@ class DivergeEnv(AbstractEnv):
             net.add_lane("a", "b", l[0])
             net.add_lane("b", "c", l[1])
             net.add_lane("c", "d", l[2])
+
    
         road = Road(network=net, np_random=self.np_random, record_history=self.config["show_trajectories"])
 #        road.objects.append(Obstacle(road, lbc.position(ends[2], 0)))
@@ -119,12 +125,9 @@ class DivergeEnv(AbstractEnv):
         road.vehicles.append(ego_vehicle)
 
         other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
-        ado_vehichles = [other_vehicles_type(road, road.network.get_lane(("a", "b", 0)).position(90, 0), speed=29,target_lane_index=("b","c",np.random.randint(2))),
-                         other_vehicles_type(road, road.network.get_lane(("a", "b", 1)).position(70, 0), speed=31,target_lane_index=("b","c",np.random.randint(2))),
-                         other_vehicles_type(road, road.network.get_lane(("a", "b", 0)).position(40, 0), speed=30.5,target_lane_index=("b","c",np.random.randint(2))),
-                         other_vehicles_type(road, road.network.get_lane(("a", "b", 0)).position(5, 0), speed=31.5,target_lane_index=("b","c",np.random.randint(2)))]
-        for car in ado_vehichles:
-            road.vehicles.append(car)
+        road.vehicles.append(other_vehicles_type(road, road.network.get_lane(("a", "b", 0)).position(90, 0), speed=29,target_lane_index=("b","c",np.random.randint(2))))
+        road.vehicles.append(other_vehicles_type(road, road.network.get_lane(("a", "b", 1)).position(70, 0), speed=31,target_lane_index=("b","c",np.random.randint(2))))
+        road.vehicles.append(other_vehicles_type(road, road.network.get_lane(("a", "b", 0)).position(5, 0), speed=31.5,target_lane_index=("b","c",np.random.randint(2))))
 
         self.vehicle = ego_vehicle
 
