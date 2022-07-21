@@ -65,7 +65,7 @@ class DivergeEnv(AbstractEnv):
 
     def _is_terminal(self) -> bool:
         """The episode is over when a collision occurs or when the access ramp has been passed."""
-        return self.vehicle.crashed or bool(self.vehicle.position[0] > 370)
+        return self.vehicle.crashed or bool(self.vehicle.position[0] > 325)
 
     def _reset(self) -> None:
         self._make_road()
@@ -80,23 +80,45 @@ class DivergeEnv(AbstractEnv):
 
         # Highway lanes
         ends = self.config["partition_length"]  # Before, converging, merge, after
+
+        n_lanes = 4
+        n_div = 2
+
         c, s, n = LineType.CONTINUOUS_LINE, LineType.STRIPED, LineType.NONE
         y = [0, StraightLane.DEFAULT_WIDTH]
-        line_type = [[c, s], [n, c]]
         lanes = []
-        for i in range(len(line_type)):
-            lane_parts = []
-            lane_parts.append(StraightLane([0, i*StraightLane.DEFAULT_WIDTH], [ends[0], i*StraightLane.DEFAULT_WIDTH], line_types=line_type[i]))
-            lanes.append(lane_parts)
-            
-        n_diverging = 1
-        amplitude = 2.75
-        
 
-        lanes[0].append(SineLane(lanes[0][0].position(ends[0], -amplitude), lanes[0][0].position(sum(ends[:2]), -amplitude),
+        lanes.append([StraightLane([0, 0], [ends[0], 0], line_types=[c,s])])
+        for i in range(1,n_lanes-1):
+            lanes.append([StraightLane([0, i*StraightLane.DEFAULT_WIDTH], [ends[0], i*StraightLane.DEFAULT_WIDTH], line_types=[n,s])])
+        lanes.append([StraightLane([0, (n_lanes-1)*StraightLane.DEFAULT_WIDTH], [ends[0], (n_lanes-1)*StraightLane.DEFAULT_WIDTH], line_types=[n,c])])
+            
+        amplitude = 2.75
+
+        if n_div == 1:
+            lanes[0].append(SineLane(lanes[0][0].position(ends[0], -amplitude), lanes[0][0].position(sum(ends[:2]), -amplitude),
                     amplitude, np.pi / (ends[0]), np.pi / 2, line_types=[c, c],forbidden=True))
-        lanes[1].append(SineLane(lanes[1][0].position(ends[0], amplitude), lanes[1][0].position(sum(ends[:2]), amplitude),
+            lanes[1].append(SineLane(lanes[1][0].position(ends[0], amplitude), lanes[1][0].position(sum(ends[:2]), amplitude),
                     -amplitude, np.pi / (ends[0]), np.pi / 2, line_types=[c, c],forbidden=True))
+        else:
+            lanes[0].append(SineLane(lanes[0][0].position(ends[0], -amplitude), lanes[0][0].position(sum(ends[:2]), -amplitude),
+                    amplitude, np.pi / (ends[0]), np.pi / 2, line_types=[c, s],forbidden=True))
+            for i in range(1,n_div-1):
+                lanes[i].append(SineLane(lanes[i][0].position(ends[0], -amplitude), lanes[i][0].position(sum(ends[:2]), -amplitude),
+                    amplitude, np.pi / (ends[0]), np.pi / 2, line_types=[n, s],forbidden=False))
+            lanes[n_div].append(SineLane(lanes[n_div][0].position(ends[0], -amplitude), lanes[n_div][0].position(sum(ends[:2]), -amplitude),
+                    amplitude, np.pi / (ends[0]), np.pi / 2, line_types=[n, c],forbidden=True))
+            
+            amplitude*=-1
+            lanes[n_div+1].append(SineLane(lanes[n_div+1][0].position(ends[0], -amplitude), lanes[n_div+1][0].position(sum(ends[:2]), -amplitude),
+                    amplitude, np.pi / (ends[0]), np.pi / 2, line_types=[c, s],forbidden=True))
+            for i in range(n_div+1,n_lanes):
+                lanes[i].append(SineLane(lanes[i][0].position(ends[0], -amplitude), lanes[i][0].position(sum(ends[:2]), -amplitude),
+                    amplitude, np.pi / (ends[0]), np.pi / 2, line_types=[n, s],forbidden=False))
+            lanes[n_lanes].append(SineLane(lanes[n_lanes][0].position(ends[0], -amplitude), lanes[n_lanes][0].position(sum(ends[:2]), -amplitude),
+                    amplitude, np.pi / (ends[0]), np.pi / 2, line_types=[n, c],forbidden=True))
+
+            
         
         for lane in lanes:
             lane.append(StraightLane(lane[1].position(ends[1], 0), lane[1].position(ends[1], 0) + [ends[2], 0],
@@ -125,7 +147,8 @@ class DivergeEnv(AbstractEnv):
         road.vehicles.append(ego_vehicle)
 
         other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
-        road.vehicles.append(other_vehicles_type(road, road.network.get_lane(("a", "b", 0)).position(90, 0), speed=29,target_lane_index=("b","c",np.random.randint(2))))
+        road.vehicles.append(other_vehicles_type(road, road.network.get_lane(("a", "b", 1)).position(90, 0), speed=29,target_lane_index=("b","c",np.random.randint(2))))
+        road.vehicles.append(other_vehicles_type(road, road.network.get_lane(("a", "b", 0)).position(40, 0), speed=30.5,target_lane_index=("b","c",np.random.randint(2))))
         road.vehicles.append(other_vehicles_type(road, road.network.get_lane(("a", "b", 1)).position(70, 0), speed=31,target_lane_index=("b","c",np.random.randint(2))))
         road.vehicles.append(other_vehicles_type(road, road.network.get_lane(("a", "b", 0)).position(5, 0), speed=31.5,target_lane_index=("b","c",np.random.randint(2))))
 
