@@ -27,9 +27,9 @@ class DivergeEnv(AbstractEnv):
             "high_speed_reward": 0.2,
             "merging_speed_reward": -0.5,
             "lane_change_reward": -0.05,
-            "partition_length":[150, 40, 200]
-            "n_lanes":4
-            "n_div":1
+            "partition_length":[150, 40, 200],
+            "n_lanes":4,
+            "n_div":1,
         })
         return cfg
 
