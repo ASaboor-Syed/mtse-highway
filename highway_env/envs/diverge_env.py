@@ -120,6 +120,7 @@ class DivergeEnv(AbstractEnv):
             
         
         for lane in lanes:
+            print(len(lane))
             lane.append(StraightLane(lane[1].position(ends[1], 0), lane[1].position(ends[1], 0) + [ends[2], 0],
                            line_types=[c, c],forbidden=True))
 
