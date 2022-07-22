@@ -82,7 +82,7 @@ class DivergeEnv(AbstractEnv):
         ends = self.config["partition_length"]  # Before, converging, merge, after
 
         n_lanes = 4
-        n_div = 2
+        n_div = 1
 
         c, s, n = LineType.CONTINUOUS_LINE, LineType.STRIPED, LineType.NONE
         y = [0, StraightLane.DEFAULT_WIDTH]
