@@ -98,8 +98,6 @@ class DivergeEnv(AbstractEnv):
         if n_div == 1:
             lanes[0].append(SineLane(lanes[0][0].position(ends[0], -amplitude), lanes[0][0].position(sum(ends[:2]), -amplitude),
                     amplitude, np.pi / (ends[0]), np.pi / 2, line_types=[c, c],forbidden=True))
-            lanes[1].append(SineLane(lanes[1][0].position(ends[0], amplitude), lanes[1][0].position(sum(ends[:2]), amplitude),
-                    -amplitude, np.pi / (ends[0]), np.pi / 2, line_types=[c, c],forbidden=True))
         else:
             lanes[0].append(SineLane(lanes[0][0].position(ends[0], -amplitude), lanes[0][0].position(sum(ends[:2]), -amplitude),
                     amplitude, np.pi / (ends[0]), np.pi / 2, line_types=[c, s],forbidden=True))
@@ -108,8 +106,12 @@ class DivergeEnv(AbstractEnv):
                     amplitude, np.pi / (ends[0]), np.pi / 2, line_types=[n, s],forbidden=False))
             lanes[n_div-1].append(SineLane(lanes[n_div-1][0].position(ends[0], -amplitude), lanes[n_div-1][0].position(sum(ends[:2]), -amplitude),
                     amplitude, np.pi / (ends[0]), np.pi / 2, line_types=[n, c],forbidden=True))
-            
             amplitude*=-1
+            
+        if n_lanes-n_div == 1:
+            lanes[n_lanes-1].append(SineLane(lanes[1][0].position(ends[0], amplitude), lanes[1][0].position(sum(ends[:2]), amplitude),
+                    -amplitude, np.pi / (ends[0]), np.pi / 2, line_types=[c, c],forbidden=True))
+        else:
             lanes[n_div].append(SineLane(lanes[n_div][0].position(ends[0], -amplitude), lanes[n_div][0].position(sum(ends[:2]), -amplitude),
                     amplitude, np.pi / (ends[0]), np.pi / 2, line_types=[c, s],forbidden=True))
             for i in range(n_div+1,n_lanes-1):
