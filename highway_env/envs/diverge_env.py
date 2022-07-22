@@ -28,6 +28,8 @@ class DivergeEnv(AbstractEnv):
             "merging_speed_reward": -0.5,
             "lane_change_reward": -0.05,
             "partition_length":[150, 40, 200]
+            "n_lanes":4
+            "n_div":1
         })
         return cfg
 
@@ -81,8 +83,8 @@ class DivergeEnv(AbstractEnv):
         # Highway lanes
         ends = self.config["partition_length"]  # Before, converging, merge, after
 
-        n_lanes = 4
-        n_div = 1
+        n_lanes = self.config["n_lanes"]
+        n_div = self.config["n_div"]
 
         c, s, n = LineType.CONTINUOUS_LINE, LineType.STRIPED, LineType.NONE
         y = [0, StraightLane.DEFAULT_WIDTH]
